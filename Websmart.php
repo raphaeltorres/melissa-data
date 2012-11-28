@@ -22,25 +22,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 abstract class Websmart 
 {
 	
-	/**
-	 * Base URL for websmart service
-	 *
-	 * @var string
-	 */
-	protected $_xml_base_url = NULL;
+   /**
+    * Base URL for websmart service
+    *
+    * @var string
+    */
+    protected $_xml_base_url = NULL;
 	
-	/**
-	 * customer id
-	 *
-	 * @var string
-	 */
+   /**
+    * customer id
+    *
+    * @var string
+    */
     protected $_customer_id = NULL;
     
-    /**
-	 * Should the service return the parsed address?
-	 *
-	 * @var bool
-	 */
+   /**
+    * Should the service return the parsed address?
+    *
+    * @var bool
+    */
     protected $_parse_address = TRUE;
     
     /**
@@ -50,29 +50,29 @@ abstract class Websmart
      */
     public $ci;
     
-	/**
-	 * Constructor function
-	 */
-	public function __construct()
+   /**
+    * Constructor function
+    */
+    public function __construct()
     {
         $this->ci = & get_instance();
         
         // Lets grab the config and get ready to party
-		$this->ci->load->config('address_verification');
+	$this->ci->load->config('address_verification');
         $this->_xml_base_url = config_item('md_xml_base_url');
         $this->_cust_id = config_item('md_cust_id'); 
         $this->_parse_address = config_item('md_parse_address');
     }
     
-    /**
-	 * Verify Addres
-	 *
-	 * Facade to allow the future switching between GET and POST methods
-	 * 
-	 * @param array $data Multidimensional array of address data
-	 * @return array $a cleansed array of address data
-	 * @uses _array_to_xml
-	 */
+   /**
+    * Verify Addres
+    *
+    * Facade to allow the future switching between GET and POST methods
+    * 
+    * @param array $data Multidimensional array of address data
+    * @return array $a cleansed array of address data
+    * @uses _array_to_xml
+    */
     public function verify_address($data)
     {
         
@@ -87,15 +87,15 @@ abstract class Websmart
         
     }
     
-    /**
-	 * Do Post 
-	 * 
-	 * Method to post data to Websmart and return response
-	 *
-	 * @param object $xml_payload Requires XML object to post
-	 * @access private
-	 * @return object|bool If success, object is returned, else FALSE
-	 */
+   /**
+    * Do Post 
+    * 
+    * Method to post data to Websmart and return response
+    *
+    * @param object $xml_payload Requires XML object to post
+    * @access private
+    * @return object|bool If success, object is returned, else FALSE
+    */
     private function _do_post($xml_payload)
     {
         $data = $xml_payload->asXML();
@@ -105,9 +105,21 @@ abstract class Websmart
                         'Content-Type: text/xml',
                         'Content-Length: ' . strlen($data)
                         ); 
-        
-        return request($this->_xml_base_url, 'POST', $data, $headers);
-        
+      
+        $params = array(
+                'http' => array( 
+                           'method' => 'POST',
+                           'header' => $headers,  
+                           'content' => $data
+                           )
+                    ); 
+    
+        $ctx = stream_context_create($params);
+        if ($fp = @file_get_contents($url, false, $ctx, -1)) {
+            return $fp;    
+        } else {
+            return FALSE;
+        }
     }
         
     /**
@@ -116,7 +128,7 @@ abstract class Websmart
      * Method to convert incoming array to properly formatted XML object for WebSmart
      *
      * +> Example <+
-	 *   <RequestArray>
+     *   <RequestArray>
      *      <TransmissionReference>Web Service Test 2008/12/31
      *      </TransmissionReference>
      *      <CustomerID>123456789</CustomerID>
@@ -138,10 +150,10 @@ abstract class Websmart
      *          ...
      *      </Record>
      *   </RequestArray>
-	 * 
-	 * @param array $data Multidimensional array of address data
-	 * @return object $xml_payload XML object to be used and posted
-	 */
+     * 
+     * @param array $data Multidimensional array of address data
+     * @return object $xml_payload XML object to be used and posted
+     */
     private function _array_to_xml($data)
     {
         $xml_payload = new SimpleXMLElement("<?xml version='1.0'?><RequestArray></RequestArray>");
