@@ -60,7 +60,7 @@ abstract class Websmart
         // Lets grab the config and get ready to party
 	$this->ci->load->config('address_verification');
         $this->_xml_base_url = config_item('md_xml_base_url');
-        $this->_cust_id = config_item('md_cust_id'); 
+        $this->_customer_id = config_item('md_cust_id'); 
         $this->_parse_address = config_item('md_parse_address');
     }
     
@@ -115,7 +115,7 @@ abstract class Websmart
                     ); 
     
         $ctx = stream_context_create($params);
-        if ($fp = @file_get_contents($url, false, $ctx, -1)) {
+        if ($fp = @file_get_contents($this->_xml_base_url, false, $ctx, -1)) {
             return $fp;    
         } else {
             return FALSE;
@@ -158,7 +158,7 @@ abstract class Websmart
     {
         $xml_payload = new SimpleXMLElement("<?xml version='1.0'?><RequestArray></RequestArray>");
         
-        $xml_payload->addChild('CustomerID',$this->_cust_id);
+        $xml_payload->addChild('CustomerID',$this->_customer_id);
         $xml_payload->addChild('OptAddressParsed',$this->_parse_address);
         
         foreach ($data as $key => $record) {
