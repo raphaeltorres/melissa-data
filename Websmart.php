@@ -68,26 +68,26 @@ abstract class Websmart {
         // Lets grab the config and get ready to party
         $this->ci->load->config('address_verification');
 
-        $this->_customer_id    = config_item('md_cust_id');
-        $this->_parse_address  = config_item('md_parse_address');
+        $this->_customer_id   = config_item('md_cust_id');
+        $this->_parse_address = config_item('md_parse_address');
 
         // Only need one of these at a time. Could move them into
         // verify_address() but that would make un-CodeIgniter-ing
         // this class in the future a bit more difficult.
-        $this->_xml_base_url   = config_item('md_xml_base_url');
-        $this->_rest_base_url  = config_item('md_rest_base_url');
-
+        $this->_xml_base_url  = config_item('md_xml_base_url');
+        $this->_rest_base_url = config_item('md_rest_base_url');
     }
 
     /**
      * Verify Address
      *
-     * Facade to allow the future switching between GET and POST methods
+     * Facade to allow switching between GET and POST methods
      *
-     * @param   array  $data  Multidimensional array of address data
-     * @param   string $data  XML (check 1 or more records) or REST (check 1 record)
-     * @return  array  $a     Cleansed array of address data
+     * @param   array  $data    Multidimensional array (for XML) or array (for REST) of address data
+     * @param   string $method  XML (check 1 or more records) or REST (check 1 record)
+     * @return  array  $a       Cleansed array of address data
      * @uses    _array_to_xml
+     * @uses    _array_to_rest
      */
     public function verify_address($data, $method = 'XML')
     {
@@ -167,9 +167,9 @@ abstract class Websmart {
      *
      * Method to send a GET request to Websmart and return response
      *
-     * @param   string  $query_string  Requires XML object to post
+     * @param   string  $query_string  Requires query string
      * @access  private
-     * @return  object|bool           If success, object is returned, else FALSE
+     * @return  object|bool            If success, object is returned, else FALSE
      */
     private function _do_rest($query_string)
     {
@@ -248,9 +248,9 @@ abstract class Websmart {
     }
 
     /**
-     * Convert array to REST query string
+     * Convert array to query string
      *
-     * Method to convert incoming array to properly formatted URI string
+     * Method to convert incoming array to properly formatted query string
      * for WebSmart REST lookup of a SINGLE ADDRESS.
      *
      * See: http://www.melissadata.com/manuals/dqt-websmart-addresscheck-reference-guide.pdf
