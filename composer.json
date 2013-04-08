@@ -1,0 +1,25 @@
+{
+    "name": "stanley/websmart",
+    "type": "library",
+    "description": "Easily validate addresses with the Websmart Melissa Data address service",
+    "keywords": ["address verification", "address", "verify"],
+    "homepage": "https://github.com/davidstanley01/melissa-data",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Stanley",
+            "email": "davidstanley01@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/davidstanley01/melissa-data/issues"
+    },
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Stanley\\Websmart": "src/"
+        }
+    }
+}
