@@ -90,7 +90,16 @@ class Websmart
      */
     public function postAddresses( array $input )
     {
-         
+        // Can only submit 100 addresses at a time this way
+        if (count($input) > 100) {
+            throw new Exception('Too many nodes in address array.');
+        }  
+
+        // Get the XML object
+        $xml_payload = $this->getXML( $input );
+
+        // Do work!
+        return $this->doPost( $xml_payload );
     }
 
     /**
