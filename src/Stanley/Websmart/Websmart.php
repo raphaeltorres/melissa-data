@@ -39,7 +39,7 @@ class Websmart
     public function __construct( $customerID, $parseAddress = true )
     {
         $this->customerID = $customerID;
-        $this->method = $method;
+        $this->parseAddress = $parseAddress;
     }
 
     /**
